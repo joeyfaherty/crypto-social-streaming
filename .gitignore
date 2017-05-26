@@ -1,5 +1,7 @@
 commit.template
 
+tmp
+twitterCredentials.properties
 **/logs
 **/*.iml
 **/.idea

@@ -32,8 +32,6 @@ object TwitterStreamerService {
 
     val ssc = new StreamingContext("local[*]", getClass.getName, Seconds(1))
 
-    Logger.getRootLogger.setLevel(Level.ERROR)
-
     // Create a DStream from Twitter using our streaming context
     val tweets: DStream[Status] = TwitterUtils.createStream(ssc, None)
     // Now extract the text of each status update into DStreams using map()
