@@ -1,5 +1,7 @@
 commit.template
 
+clickstream
+
 tmp
 twitterCredentials.properties
 **/logs

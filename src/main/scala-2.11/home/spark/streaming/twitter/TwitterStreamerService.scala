@@ -1,4 +1,4 @@
-package home.spark.streaming
+package home.spark.streaming.twitter
 
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.streaming._
@@ -32,9 +32,9 @@ object TwitterStreamerService {
 
     val ssc = new StreamingContext("local[*]", getClass.getName, Seconds(1))
 
-    // Create a DStream from Twitter using our streaming context
+    // Create a DStream from Twitter using the streaming context
     val tweets: DStream[Status] = TwitterUtils.createStream(ssc, None)
-    // Now extract the text of each status update into DStreams using map()
+    // Extract the text of each status update into DStreams using map()
     val hashTags: DStream[String] = tweets.map(status => status.getText)
         // Blow out each word into a new DStream
         .flatMap(tweetText => tweetText.split(" ")).map(s => s.toLowerCase)
@@ -47,11 +47,11 @@ object TwitterStreamerService {
         // Sort the results by the count values
         .transform(rdd => rdd.sortBy(x => x._2, ascending = false))
 
-    // Print the top 10
+    // Print the top 10 current hashtags on twitter
     hashtagKeyValues.print
 
     //** Fault-tolerant (HDFS-like) directory where the checkpoint data will be reliably stored. */
-    ssc.checkpoint("./tmp")
+    ssc.checkpoint("/tmp")
     ssc.start()
     ssc.awaitTermination()
 
