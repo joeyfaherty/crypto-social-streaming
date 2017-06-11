@@ -1,13 +1,11 @@
-package home.spark.streaming.clickstream.sparkdrivers
+package home.spark.batch.clickstream.sparkdrivers
 
-import home.spark.streaming.clickstream.domain.Query
+import home.spark.batch.clickstream.domain.Query
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.sql._
 
 
 /**
-  * find the top 10 growing (popular) and top 10 declining queries executed by users.
-  *
   * csv file in the format:
   * user;sku;category;query;click_time;query_time;city;country;location;time_spent
   */

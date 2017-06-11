@@ -50,7 +50,7 @@ object TwitterStreamerService {
     // Print the top 10 current hashtags on twitter
     hashtagKeyValues.print
 
-    //** Fault-tolerant (HDFS-like) directory where the checkpoint data will be reliably stored. */
+    /** Fault-tolerant (HDFS-like) directory where the checkpoint data will be reliably stored. */
     ssc.checkpoint("/tmp")
     ssc.start()
     ssc.awaitTermination()
