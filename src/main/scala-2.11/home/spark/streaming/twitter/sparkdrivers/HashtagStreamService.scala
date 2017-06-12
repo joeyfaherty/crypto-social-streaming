@@ -1,4 +1,4 @@
-package home.spark.streaming.twitter
+package home.spark.streaming.twitter.sparkdrivers
 
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.streaming._
@@ -12,7 +12,7 @@ import scala.io.Source
   * stream tweets in real time and print top 10 hashtags in a sliding window of 1 sec,
   * during a 3 minute window
   */
-object TwitterStreamerService {
+object HashtagStreamService {
 
   def setUpTwitterCredentials(): Unit = {
     // properties file is in the form k=v
