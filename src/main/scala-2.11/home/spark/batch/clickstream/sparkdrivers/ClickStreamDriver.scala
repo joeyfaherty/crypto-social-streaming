@@ -1,6 +1,7 @@
 package home.spark.batch.clickstream.sparkdrivers
 
 import home.spark.batch.clickstream.domain.Query
+import home.spark.util.SparkSessionUtil
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.sql._
 
@@ -23,27 +24,6 @@ object ClickStreamDriver {
   }
 
   /**
-    * selects which SparkSession to use either local for unit tests or
-    * any other string will create a SparkSession with cluster configuration
-    *
-    * @param env
-    * @return
-    */
-  def getSS(env: String): SparkSession = env match {
-    case "local" => SparkSession
-      .builder()
-      // run locally utilizing all cores
-      .master("local[*]")
-      .appName(getClass.getName)
-      .getOrCreate()
-    case _ => SparkSession
-      .builder()
-      // don't set .master() when running on the cluster, as Spark will then use the default cluster pre-configuration
-      .appName(getClass.getName)
-      .getOrCreate()
-  }
-
-  /**
     * Loads a CSV file with clickstream data, prints the top/bottom 10 queries to the console,
     * persists the data as a parquet file to be accessed for trending, analysis, campaigns.
     * @param env
@@ -52,7 +32,7 @@ object ClickStreamDriver {
     logger.info("Starting spark driver script for clickstream CSV processing")
     Logger.getLogger("org").setLevel(Level.ERROR)
 
-    val sparkSession = getSS(env)
+    val sparkSession = SparkSessionUtil.getSS(env, getClass.getName)
 
     import sparkSession.implicits._
 

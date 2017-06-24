@@ -8,12 +8,15 @@ val sparkVersion = "2.1.0"
 libraryDependencies ++= Seq(
   // no need to package spark-core, spark-sql into jar file as we know they will be pre-installed on the cluster
   "org.apache.spark" %% "spark-core" % sparkVersion /*% "provided"*/ exclude("org.scalatest", "scalatest_2.11"),
-  "org.apache.spark" %% "spark-sql" % sparkVersion /*% "provided"*/,
+  "org.apache.spark" %% "spark-sql" % sparkVersion /*% "provided"*/ ,
   "org.apache.spark" %% "spark-streaming" % sparkVersion,
+  "org.apache.spark" %% "spark-mllib" % sparkVersion,
   "org.twitter4j" % "twitter4j-core" % "4.0.6",
   "org.twitter4j" % "twitter4j-stream" % "4.0.6",
   "org.apache.bahir" %% "spark-streaming-twitter" % sparkVersion,
-  "org.scalatest" %% "scalatest" % "3.0.1" % "test"
+  "org.scalatest" %% "scalatest" % "3.0.1" % "test",
+  "org.apache.kafka" % "kafka-clients" % "0.10.2.1",
+  "edu.stanford.nlp" % "stanford-corenlp" % "3.5.2" artifacts (Artifact("stanford-corenlp", "models"), Artifact("stanford-corenlp"))
 )
 
 fork in run := true
