@@ -1,5 +1,7 @@
 package home.spark.streaming.twitter.sparkdrivers
 
+import home.spark.batch.clickstream.sparkdrivers.ClickStreamDriver.getClass
+import home.spark.machinelearning.classification.naivebayes.TweetSentimentAnalysis
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.streaming._
 import org.apache.spark.streaming.dstream.DStream
@@ -13,6 +15,8 @@ import scala.io.Source
   * during a 3 minute window
   */
 object HashtagStreamService {
+
+  val logger: Logger = Logger.getLogger(getClass.getName)
 
   def setUpTwitterCredentials(): Unit = {
     // properties file is in the form k=v
@@ -37,8 +41,8 @@ object HashtagStreamService {
     // Extract the text of each status update into DStreams using map()
     val hashTags: DStream[String] = tweets.map(status => status.getText)
         // Blow out each word into a new DStream
-        .flatMap(tweetText => tweetText.split(" ")).map(s => s.toLowerCase)
-        .filter(filterCriteria)
+        //.flatMap(tweetText => tweetText.split(" ")).map(s => s.toLowerCase)
+        //.filter(filterCriteria)
 
     // Map each hashtag to a key/value pair of (hashtag, 1) so we can count them up by adding up the values
     val hashtagKeyValues: DStream[(String, Int)] = hashTags.map(hashtag => (hashtag, 1))
@@ -48,7 +52,9 @@ object HashtagStreamService {
         .transform(rdd => rdd.sortBy(x => x._2, ascending = false))
 
     // Print the top 10 current hashtags on twitter
-    hashtagKeyValues.print
+    hashTags.print
+    TweetSentimentAnalysis.mainSentiment(hashTags.)
+
 
     /** Fault-tolerant (HDFS-like) directory where the checkpoint data will be reliably stored. */
     ssc.checkpoint("/tmp")

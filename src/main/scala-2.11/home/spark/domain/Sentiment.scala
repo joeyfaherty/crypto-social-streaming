@@ -1,9 +1,13 @@
 package home.spark.domain
 
+import org.apache.log4j.Logger
+
 /**
   * Enum for the sentiment of the input text
   */
 object Sentiment extends Enumeration {
+
+  val logger: Logger = Logger.getLogger(getClass.getName)
 
   type Sentiment = Value
   val POSITIVE, NEGATIVE, NEUTRAL = Value

@@ -14,7 +14,7 @@ class TweetSentimentAnalysisSpec extends FunSpec with Matchers {
     }
 
     it("should return NEGATIVE") {
-      val input = "I hate all football."
+      val input = "I hate sports."
       val sentiment = TweetSentimentAnalysis.mainSentiment(input)
       sentiment should be(Sentiment.NEGATIVE)
     }

@@ -9,17 +9,22 @@ import edu.stanford.nlp.sentiment.SentimentCoreAnnotations
 import edu.stanford.nlp.util.CoreMap
 import home.spark.domain.Sentiment
 import home.spark.domain.Sentiment.Sentiment
+import org.apache.log4j.Logger
 
 import scala.collection.convert.wrapAll._
 
 object TweetSentimentAnalysis {
 
+  val logger: Logger = Logger.getLogger(getClass.getName)
+
+  // creates a StanfordCoreNLP object, with POS tagging, lemmatization, NER,
+  // parsing, and coreference resolution
   val props = new Properties()
   props.setProperty("annotators", "tokenize, ssplit, parse, sentiment")
   val pipeline: StanfordCoreNLP = new StanfordCoreNLP(props)
 
   /**
-    * Extracts the main sentiment for a given input
+    * validates the input string and if valid calls extractSentiment
     */
   def mainSentiment(input: String): Sentiment = Option(input) match {
     case Some(text) if text.nonEmpty => extractSentiment(text)
@@ -27,19 +32,21 @@ object TweetSentimentAnalysis {
   }
 
   /**
-    * Extracts a list of sentiments for a given input
+    * calls extractSentiments with input text and get max value of sentence.
+    * @param text
+    * @return Sentiment with the longest (main) sentence
     */
-  def sentiment(input: String): List[(String, Sentiment)] = Option(input) match {
-    case Some(text) if text.nonEmpty => extractSentiments(text)
-    case _ => throw new IllegalArgumentException("input can't be null or empty")
-  }
-
   private def extractSentiment(text: String): Sentiment = {
     val (_, sentiment) = extractSentiments(text)
       .maxBy { case (sentence, _) => sentence.length }
-    sentiment
+    (sentiment)
   }
 
+  /**
+    * Uses Stanford NLP to process the text.
+    * @param text
+    * @return
+    */
   private def extractSentiments(text: String): List[(String, Sentiment)] = {
     val annotation: Annotation = pipeline.process(text)
     val sentences: java.util.List[CoreMap] = annotation.get(classOf[CoreAnnotations.SentencesAnnotation])
